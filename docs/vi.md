@@ -1,5 +1,62 @@
 ![CF_logo_stacked_whitetype](https://github.com/luxysiv/Cloudflare-Gateway-Pihole/assets/46205571/b8b7b12b-2fd8-4978-8e3c-2472a4167acb)
 
+### Cập nhật mới
+
+* Nếu nhận được e-mail kêu bị dừng Github Action, đừng lo lắng, Github Action sẽ tiếp tục chạy mãi mãi hoặc [Cài thời gian script tự động chạy](#cai-thoi-gian-script-tu-dong-chay)
+
+* Logic mới, sẽ cập nhật chính xác tên miền thay đổi, không gây thiệt hại lên máy chủ Cloudflare, có thể chạy cron hàng giờ
+
+* Các bạn phải xoá các danh sách được tải lên bởi script khác để tạo số danh sách trống
+
+* Đừng quan tâm đến số danh sách được tạo ra bởi script.
+
+* Thêm danh sách trắng riêng ở [Cloudflare-Gateway-Allow](https://github.com/luxysiv/Cloudflare-Gateway-Allow)...
+
+### Cài thời gian script tự động chạy 
+---
+> Sử dụng Cloudflare Workers để chạy Github Action. Không lo sau 2 tháng Github tắt Action.Tạo Github Token không hết hạn với quyền truy cập workflow là đủ.
+```javascript
+addEventListener('scheduled', event => {
+  event.waitUntil(handleScheduledEvent());
+});
+
+async function handleScheduledEvent() {
+  // --- CONFIGURATION ---
+  const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN_HERE';
+  const GITHUB_USER  = 'YOUR_USER_NAME';
+  const GITHUB_REPO  = 'YOUR_REPO_NAME';
+  const WORKFLOW_ID  = 'main.yml'; 
+  // ---------------------
+
+  const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/actions/workflows/${WORKFLOW_ID}/dispatches`;
+
+  try {
+    const dispatchResponse = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Content-Type': 'application/json',
+        'User-Agent': 'Cloudflare-Worker-Trigger',
+      },
+      body: JSON.stringify({
+        ref: 'main'
+      }),
+    });
+
+    if (!dispatchResponse.ok) {
+      const errorText = await dispatchResponse.text();
+      throw new Error(`Status: ${dispatchResponse.status} - ${errorText}`);
+    }
+    console.log('Successfully dispatched GitHub Action');
+  } catch (error) {
+    console.error('Error handling scheduled event:', error);
+  }
+}
+
+```
+Nhớ cài cron trigger cho Cloudflare Workers 
+
+
 ### Dành cho các bạn Việt Nam
 ---
 Các bạn cần phân biệt `bộ lọc DNS` và `bộ lọc browser`. Mình thấy nhiều bạn đem `bộ lọc browser` lên chạy -> lỗi lướt web

@@ -2,6 +2,31 @@
 
 **[English](README.md)** | **[Việt Nam](docs/vi.md)**
 
+# Schedule
+
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/luxysiv/cloudflare-gateway-pihole-trigger)
+
+| Variable | Description | Example |
+| :--- | :--- | :--- |
+| `GITHUB_TOKEN` | Your GitHub Personal Access Token (Need Workflow permission and no expiration) | `ghp_xxxxxxxxxxxx` |
+| `GITHUB_USER` | Your GitHub username | `luxysiv` |
+| `GITHUB_REPO` | The name of your repository | `Cloudflare-Gateway-Pihole` |
+| `WORKFLOW_ID` | The filename of your workflow | `main.yml` |
+
+* Opt for a private repository when deploying.
+
+* Once deployment is complete, you may remove the cloned repository.
+
+# New update 
+
+* Major update, you can run cron every hour, no need to worry about losing blocking effect, no damage to Cloudflare Gateway server 
+
+* You must delete the lists of other scripts.
+
+* Don't worry about the number of listings on Cloudflare Gateway, for example there are 132k domains but the number of listings can be 140
+
+* To add a separate white list inviting visit [Cloudflare-Gateway-Allow](https://github.com/luxysiv/Cloudflare-Gateway-Allow)
+
 # Pihole styled, but using Cloudflare Gateway
 `For Devs, Ops, and everyone who hates Ads.`
 
@@ -47,6 +72,7 @@ Adguard = https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
   ```
 
 * You should add your ad list and whitelist to Action variables. If you update your fork, your custom list will not be lost.
+
 
 ### How to set this up?
 ---
